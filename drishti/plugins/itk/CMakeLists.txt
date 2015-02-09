@@ -1,0 +1,8 @@
+LINK_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR}/../common)
+
+ADD_SUBDIRECTORY(binarythinning)
+ADD_SUBDIRECTORY(connectedcomponent)
+ADD_SUBDIRECTORY(distancemap)
+ADD_SUBDIRECTORY(edgepreserving)
+ADD_SUBDIRECTORY(smoothing)
+#ADD_SUBDIRECTORY(ved)

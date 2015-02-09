@@ -1,0 +1,81 @@
+SET(drishtiimport_SOURCES 
+  global.cpp 
+  staticfunctions.cpp 
+  fileslistdialog.cpp 
+  main.cpp 
+  remapwidget.cpp 
+  remaphistogramline.cpp 
+  remaphistogramwidget.cpp 
+  remapimage.cpp 
+  gradienteditor.cpp 
+  gradienteditorwidget.cpp 
+  dcolordialog.cpp 
+  dcolorwheel.cpp 
+  drishtiimport.cpp 
+  myslider.cpp 
+  raw2pvl.cpp 
+  savepvldialog.cpp 
+  volumedata.cpp
+  volumefilemanager.cpp 
+  marchingcubes.cpp 
+  ply.c)
+
+SET(drishtiimport_HEADERS 
+  global.h 
+  common.h 
+  staticfunctions.h 
+  fileslistdialog.h 
+  remapwidget.h 
+  remaphistogramline.h 
+  remaphistogramwidget.h 
+  remapimage.h 
+  gradienteditor.h 
+  gradienteditorwidget.h 
+  dcolordialog.h 
+  dcolorwheel.h 
+  drishtiimport.h 
+  myslider.h 
+  raw2pvl.h 
+  savepvldialog.h 
+  volumefilemanager.h 
+  volumedata.h 
+  volinterface.h 
+  lookuptable.h 
+  marchingcubes.h 
+  ply.h)
+
+SET(drishtiimport_FORMS
+  remapwidget.ui 
+  savepvldialog.ui 
+  drishtiimport.ui 
+  fileslistdialog.ui )
+
+SET(drishtiimport_RESOURCES import.qrc)
+
+QT4_WRAP_CPP(drishtiimport_HEADERS_MOC ${drishtiimport_HEADERS})
+QT4_WRAP_UI(drishtiimport_FORMS_HEADERS ${drishtiimport_FORMS})
+QT4_ADD_RESOURCES(drishtiimport_RESOURCES_RCC ${drishtiimport_RESOURCES})
+
+INCLUDE(${QT_USE_FILE})
+ADD_DEFINITIONS(${QT_DEFINITIONS})
+
+ADD_EXECUTABLE( drishtiimport 
+    ${drishtiimport_SOURCES} 
+    ${drishtiimport_HEADERS_MOC}
+    ${drishtiimport_FORMS_HEADERS} 
+    ${drishtiimport_RESOURCES_RCC})
+TARGET_LINK_LIBRARIES(drishtiimport 
+   ${QT_LIBRARIES} ${QGLVIEWER_LIBRARIES}
+   ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${GLEW_LIBRARY}
+   ${NETCDF_LIBRARIES_CXX})
+
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR} )
+
+ADD_SUBDIRECTORY(plugins)
+
+INSTALL (TARGETS drishtiimport DESTINATION ${BIN_INSTALL_DIR})
+
+
+
+
+

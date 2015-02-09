@@ -1,0 +1,32 @@
+ADD_DEFINITIONS(${QT_DEFINITIONS})
+ADD_DEFINITIONS(-DQT_PLUGIN)
+ADD_DEFINITIONS(-DQT_NO_DEBUG)
+ADD_DEFINITIONS(-DQT_SHARED)
+
+SET(nrrdplugin_SOURCES
+  nrrdplugin.cpp)
+
+SET(nrrdplugin_HEADERS
+  nrrdplugin.h)
+
+#SET(nrrdplugin_RESOURCES nrrd.qrc)
+
+#SET(nrrdplugin_FORMS ../../propertyeditor.ui)
+
+QT4_WRAP_CPP(nrrdplugin_HEADERS_MOC ${nrrdplugin_HEADERS})
+#QT4_WRAP_UI(nrrdplugin_FORMS_HEADERS ${nrrdplugin_FORMS})
+#QT4_ADD_RESOURCES(nrrdplugin_RESOURCES_RCC ${nrrdplugin_RESOURCES})
+
+INCLUDE(${QT_USE_FILE})
+ADD_DEFINITIONS(${QT_DEFINITIONS})
+
+ADD_LIBRARY(nrrdplugin SHARED ${nrrdplugin_SOURCES} 
+    ${nrrdplugin_HEADERS_MOC})
+#    ${nrrdplugin_FORMS_HEADERS} 
+#    ${nrrdplugin_RESOURCES_RCC})
+TARGET_LINK_LIBRARIES(nrrdplugin common
+   ${QT_LIBRARIES} ${QGLVIEWER_LIBRARIES}
+   ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${GLEW_LIBRARY}
+   ${NETCDF_LIBRARIES_CXX} ${ITK_LIBRARIES})
+
+INSTALL (TARGETS nrrdplugin DESTINATION ${PLUGIN_INSTALL_DIR}/importplugins)

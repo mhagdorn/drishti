@@ -1,0 +1,36 @@
+ADD_DEFINITIONS(${QT_DEFINITIONS})
+ADD_DEFINITIONS(-DQT_PLUGIN)
+ADD_DEFINITIONS(-DQT_NO_DEBUG)
+ADD_DEFINITIONS(-DQT_SHARED)
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/drishti)
+
+SET(mopplugin_SOURCES 
+  itksegmentation.cpp)
+
+SET(mopplugin_HEADERS
+  itksegmentation.h 
+  itkBinaryThinningImageFilter3D.h)
+
+SET(mopplugin_FORMS ../propertyeditor.ui)
+
+SET(mopplugin_RESOURCES mopplugin.qrc)
+
+QT4_WRAP_CPP(mopplugin_HEADERS_MOC ${mopplugin_HEADERS})
+QT4_WRAP_UI(mopplugin_FORMS_HEADERS ${mopplugin_FORMS})
+QT4_ADD_RESOURCES(mopplugin_RESOURCES_RCC ${mopplugin_RESOURCES})
+
+INCLUDE(${QT_USE_FILE})
+ADD_DEFINITIONS(${QT_DEFINITIONS})
+LINK_DIRECTORIES(${CMAKE_BINARY_DIR}/drishti/plugins/common)
+
+ADD_LIBRARY(mopplugin SHARED ${mopplugin_SOURCES}
+    ${mopplugin_HEADERS_MOC}
+    ${mopgplugin_FORMS_HEADERS}
+    ${mopplugin_RESOURCES_RCC})
+TARGET_LINK_LIBRARIES(mopplugin 
+  common ${ITK_LIBRARIES}
+   ${QT_LIBRARIES} ${QGLVIEWER_LIBRARIES}
+   ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${GLEW_LIBRARY}
+   ${NETCDF_LIBRARIES_CXX})
+
+INSTALL (TARGETS mopplugin DESTINATION ${PLUGIN_INSTALL_DIR}/mopplugin)
