@@ -1,4 +1,3 @@
-ADD_DEFINITIONS(${QT_DEFINITIONS})
 ADD_DEFINITIONS(-DQT_PLUGIN)
 ADD_DEFINITIONS(-DQT_NO_DEBUG)
 ADD_DEFINITIONS(-DQT_SHARED)
@@ -13,12 +12,9 @@ SET(dicomplugin_HEADERS
 
 #SET(dicomplugin_FORMS ../../propertyeditor.ui)
 
-QT4_WRAP_CPP(dicomplugin_HEADERS_MOC ${dicomplugin_HEADERS})
-#QT4_WRAP_UI(dicomplugin_FORMS_HEADERS ${dicomplugin_FORMS})
-#QT4_ADD_RESOURCES(dicomplugin_RESOURCES_RCC ${dicomplugin_RESOURCES})
-
-INCLUDE(${QT_USE_FILE})
-ADD_DEFINITIONS(${QT_DEFINITIONS})
+QT5_WRAP_CPP(dicomplugin_HEADERS_MOC ${dicomplugin_HEADERS})
+#QT5_WRAP_UI(dicomplugin_FORMS_HEADERS ${dicomplugin_FORMS})
+#QT5_ADD_RESOURCES(dicomplugin_RESOURCES_RCC ${dicomplugin_RESOURCES})
 
 ADD_LIBRARY(dicomplugin SHARED ${dicomplugin_SOURCES} 
     ${dicomplugin_HEADERS_MOC})

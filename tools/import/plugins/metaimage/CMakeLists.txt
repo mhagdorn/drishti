@@ -1,4 +1,3 @@
-ADD_DEFINITIONS(${QT_DEFINITIONS})
 ADD_DEFINITIONS(-DQT_PLUGIN)
 ADD_DEFINITIONS(-DQT_NO_DEBUG)
 ADD_DEFINITIONS(-DQT_SHARED)
@@ -13,12 +12,9 @@ SET(metaimageplugin_HEADERS
 
 #SET(metaimageplugin_FORMS ../../propertyeditor.ui)
 
-QT4_WRAP_CPP(metaimageplugin_HEADERS_MOC ${metaimageplugin_HEADERS})
-#QT4_WRAP_UI(metaimageplugin_FORMS_HEADERS ${metaimageplugin_FORMS})
-#QT4_ADD_RESOURCES(metaimageplugin_RESOURCES_RCC ${metaimageplugin_RESOURCES})
-
-INCLUDE(${QT_USE_FILE})
-ADD_DEFINITIONS(${QT_DEFINITIONS})
+QT5_WRAP_CPP(metaimageplugin_HEADERS_MOC ${metaimageplugin_HEADERS})
+#QT5_WRAP_UI(metaimageplugin_FORMS_HEADERS ${metaimageplugin_FORMS})
+#QT5_ADD_RESOURCES(metaimageplugin_RESOURCES_RCC ${metaimageplugin_RESOURCES})
 
 ADD_LIBRARY(metaimageplugin SHARED ${metaimageplugin_SOURCES} 
     ${metaimageplugin_HEADERS_MOC})

@@ -13,9 +13,9 @@ SET(niftiplugin_HEADERS
 
 #SET(niftiplugin_FORMS ../../propertyeditor.ui)
 
-QT4_WRAP_CPP(niftiplugin_HEADERS_MOC ${niftiplugin_HEADERS})
-#QT4_WRAP_UI(niftiplugin_FORMS_HEADERS ${niftiplugin_FORMS})
-#QT4_ADD_RESOURCES(niftiplugin_RESOURCES_RCC ${niftiplugin_RESOURCES})
+QT5_WRAP_CPP(niftiplugin_HEADERS_MOC ${niftiplugin_HEADERS})
+#QT5_WRAP_UI(niftiplugin_FORMS_HEADERS ${niftiplugin_FORMS})
+#QT5_ADD_RESOURCES(niftiplugin_RESOURCES_RCC ${niftiplugin_RESOURCES})
 
 INCLUDE(${QT_USE_FILE})
 ADD_DEFINITIONS(${QT_DEFINITIONS})

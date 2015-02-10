@@ -1,4 +1,3 @@
-ADD_DEFINITIONS(${QT_DEFINITIONS})
 ADD_DEFINITIONS(-DQT_PLUGIN)
 ADD_DEFINITIONS(-DQT_NO_DEBUG)
 ADD_DEFINITIONS(-DQT_SHARED)
@@ -14,11 +13,9 @@ SET(edgepreservingplugin_HEADERS
 SET(edgepreservingplugin_FORMS ../../../propertyeditor.ui)
 
 
-QT4_WRAP_CPP(edgepreservingplugin_HEADERS_MOC ${edgepreservingplugin_HEADERS})
-QT4_WRAP_UI(edgepreservingplugin_FORMS_HEADERS ${edgepreservingplugin_FORMS})
+QT5_WRAP_CPP(edgepreservingplugin_HEADERS_MOC ${edgepreservingplugin_HEADERS})
+QT5_WRAP_UI(edgepreservingplugin_FORMS_HEADERS ${edgepreservingplugin_FORMS})
 
-INCLUDE(${QT_USE_FILE})
-ADD_DEFINITIONS(${QT_DEFINITIONS})
 
 ADD_LIBRARY(edgepreservingplugin SHARED ${edgepreservingplugin_SOURCES}
     ${edgepreservingplugin_HEADERS_MOC}

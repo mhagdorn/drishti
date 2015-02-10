@@ -1,6 +1,7 @@
 SET(drishtipaint_SOURCES 
   drishtipaint.cpp 
   main.cpp 
+  morphcurve.cpp
   bitmapthread.cpp 
   dcolordialog.cpp 
   dcolorwheel.cpp 
@@ -19,6 +20,7 @@ SET(drishtipaint_SOURCES
   transferfunctionmanager.cpp 
   tagcoloreditor.cpp 
   coloreditor.cpp 
+  curvegroup.cpp
   opacityeditor.cpp
   volume.cpp 
   volumefilemanager.cpp 
@@ -36,6 +38,7 @@ SET(drishtipaint_HEADERS
   gradienteditor.h 
   gradienteditorwidget.h 
   myslider.h 
+  morphcurve.h
   splineeditor.h 
   splineeditorwidget.h
   splineinformation.h 
@@ -46,6 +49,7 @@ SET(drishtipaint_HEADERS
   transferfunctionmanager.h
   tagcoloreditor.h 
   coloreditor.h 
+  curvegroup.h
   opacityeditor.h 
   volume.h 
   volumefilemanager.h 
@@ -64,13 +68,9 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR} )
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/graphcut )
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR}/graphcut )
 
-INCLUDE(${QT_USE_FILE})
-ADD_DEFINITIONS(${QT_DEFINITIONS})
-ADD_DEFINITIONS(-DQT_ASSISTANT)
-
-QT4_WRAP_CPP(drishtipaint_HEADERS_MOC ${drishtipaint_HEADERS})
-QT4_WRAP_UI(drishtipaint_FORMS_HEADERS ${drishtipaint_FORMS})
-QT4_ADD_RESOURCES(drishtipaint_RESOURCES_RCC ${drishtipaint_RESOURCES})
+QT5_WRAP_CPP(drishtipaint_HEADERS_MOC ${drishtipaint_HEADERS})
+QT5_WRAP_UI(drishtipaint_FORMS_HEADERS ${drishtipaint_FORMS})
+QT5_ADD_RESOURCES(drishtipaint_RESOURCES_RCC ${drishtipaint_RESOURCES})
 
 ADD_EXECUTABLE( drishtipaint 
     ${drishtipaint_SOURCES} 
@@ -81,6 +81,8 @@ TARGET_LINK_LIBRARIES(drishtipaint
    ${QT_LIBRARIES} ${QGLVIEWER_LIBRARIES}
    ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${GLEW_LIBRARY}
    ${NETCDF_LIBRARIES_CXX})
+
+qt5_use_modules(drishtipaint Widgets Xml)
 
 INSTALL (TARGETS drishtipaint DESTINATION ${BIN_INSTALL_DIR})
 

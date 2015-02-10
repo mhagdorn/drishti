@@ -1,5 +1,3 @@
-ADD_DEFINITIONS(${QT_DEFINITIONS})
-
 SET(common_SOURCES
   ../../mainwindowui.cpp 
   ../../cropobject.cpp 
@@ -34,10 +32,9 @@ SET(common_HEADERS
 
 SET(common_FORMS ../../propertyeditor.ui)
 
-QT4_WRAP_CPP(common_HEADERS_MOC ${common_HEADERS})
-QT4_WRAP_UI(common_FORMS_HEADERS ${common_FORMS})
-
-INCLUDE(${QT_USE_FILE})
+QT5_WRAP_CPP(common_HEADERS_MOC ${common_HEADERS})
+QT5_WRAP_UI(common_FORMS_HEADERS ${common_FORMS})
 
 ADD_LIBRARY(common STATIC ${common_SOURCES})
 SET_TARGET_PROPERTIES( common PROPERTIES COMPILE_FLAGS -fPIC)
+qt5_use_modules(common Widgets Xml OpenGL)

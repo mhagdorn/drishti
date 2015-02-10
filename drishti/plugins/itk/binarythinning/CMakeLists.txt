@@ -1,4 +1,3 @@
-ADD_DEFINITIONS(${QT_DEFINITIONS})
 ADD_DEFINITIONS(-DQT_PLUGIN)
 ADD_DEFINITIONS(-DQT_NO_DEBUG)
 ADD_DEFINITIONS(-DQT_SHARED)
@@ -15,11 +14,8 @@ SET(binarythinningplugin_HEADERS
 SET(binarythinningplugin_FORMS ../../../propertyeditor.ui)
 
 
-QT4_WRAP_CPP(binarythinningplugin_HEADERS_MOC ${binarythinningplugin_HEADERS})
-QT4_WRAP_UI(binarythinningplugin_FORMS_HEADERS ${binarythinningplugin_FORMS})
-
-INCLUDE(${QT_USE_FILE})
-ADD_DEFINITIONS(${QT_DEFINITIONS})
+QT5_WRAP_CPP(binarythinningplugin_HEADERS_MOC ${binarythinningplugin_HEADERS})
+QT5_WRAP_UI(binarythinningplugin_FORMS_HEADERS ${binarythinningplugin_FORMS})
 
 ADD_LIBRARY(binarythinningplugin SHARED ${binarythinningplugin_SOURCES}
     ${binarythinningplugin_HEADERS_MOC}

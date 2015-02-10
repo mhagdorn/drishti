@@ -15,9 +15,9 @@ SET(mopplugin_FORMS ../propertyeditor.ui)
 
 SET(mopplugin_RESOURCES mopplugin.qrc)
 
-QT4_WRAP_CPP(mopplugin_HEADERS_MOC ${mopplugin_HEADERS})
-QT4_WRAP_UI(mopplugin_FORMS_HEADERS ${mopplugin_FORMS})
-QT4_ADD_RESOURCES(mopplugin_RESOURCES_RCC ${mopplugin_RESOURCES})
+QT5_WRAP_CPP(mopplugin_HEADERS_MOC ${mopplugin_HEADERS})
+QT5_WRAP_UI(mopplugin_FORMS_HEADERS ${mopplugin_FORMS})
+QT5_ADD_RESOURCES(mopplugin_RESOURCES_RCC ${mopplugin_RESOURCES})
 
 INCLUDE(${QT_USE_FILE})
 ADD_DEFINITIONS(${QT_DEFINITIONS})

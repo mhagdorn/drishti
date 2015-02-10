@@ -1,4 +1,3 @@
-ADD_DEFINITIONS(${QT_DEFINITIONS})
 ADD_DEFINITIONS(-DQT_PLUGIN)
 ADD_DEFINITIONS(-DQT_NO_DEBUG)
 ADD_DEFINITIONS(-DQT_SHARED)
@@ -13,12 +12,9 @@ SET(analyzeplugin_HEADERS
 
 #SET(analyzeplugin_FORMS ../../propertyeditor.ui)
 
-QT4_WRAP_CPP(analyzeplugin_HEADERS_MOC ${analyzeplugin_HEADERS})
-#QT4_WRAP_UI(analyzeplugin_FORMS_HEADERS ${analyzeplugin_FORMS})
-#QT4_ADD_RESOURCES(analyzeplugin_RESOURCES_RCC ${analyzeplugin_RESOURCES})
-
-INCLUDE(${QT_USE_FILE})
-ADD_DEFINITIONS(${QT_DEFINITIONS})
+QT5_WRAP_CPP(analyzeplugin_HEADERS_MOC ${analyzeplugin_HEADERS})
+#QT5_WRAP_UI(analyzeplugin_FORMS_HEADERS ${analyzeplugin_FORMS})
+#QT5_ADD_RESOURCES(analyzeplugin_RESOURCES_RCC ${analyzeplugin_RESOURCES})
 
 ADD_LIBRARY(analyzeplugin SHARED ${analyzeplugin_SOURCES} 
     ${analyzeplugin_HEADERS_MOC})

@@ -13,9 +13,9 @@ SET(nrrdplugin_HEADERS
 
 #SET(nrrdplugin_FORMS ../../propertyeditor.ui)
 
-QT4_WRAP_CPP(nrrdplugin_HEADERS_MOC ${nrrdplugin_HEADERS})
-#QT4_WRAP_UI(nrrdplugin_FORMS_HEADERS ${nrrdplugin_FORMS})
-#QT4_ADD_RESOURCES(nrrdplugin_RESOURCES_RCC ${nrrdplugin_RESOURCES})
+QT5_WRAP_CPP(nrrdplugin_HEADERS_MOC ${nrrdplugin_HEADERS})
+#QT5_WRAP_UI(nrrdplugin_FORMS_HEADERS ${nrrdplugin_FORMS})
+#QT5_ADD_RESOURCES(nrrdplugin_RESOURCES_RCC ${nrrdplugin_RESOURCES})
 
 INCLUDE(${QT_USE_FILE})
 ADD_DEFINITIONS(${QT_DEFINITIONS})

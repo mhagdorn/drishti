@@ -1,3 +1,4 @@
+#include "DrishtiConfig.h"
 #include "drishtipaint.h"
 #include "global.h"
 #include "staticfunctions.h"

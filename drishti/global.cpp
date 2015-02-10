@@ -1,3 +1,4 @@
+#include "DrishtiConfig.h"
 #include "global.h"
 #include <QFileDialog>
 #include <QCoreApplication>

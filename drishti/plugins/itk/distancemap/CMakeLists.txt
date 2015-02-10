@@ -1,4 +1,3 @@
-ADD_DEFINITIONS(${QT_DEFINITIONS})
 ADD_DEFINITIONS(-DQT_PLUGIN)
 ADD_DEFINITIONS(-DQT_NO_DEBUG)
 ADD_DEFINITIONS(-DQT_SHARED)
@@ -14,11 +13,8 @@ SET(distancemapplugin_HEADERS
 SET(distancemapplugin_FORMS ../../../propertyeditor.ui)
 
 
-QT4_WRAP_CPP(distancemapplugin_HEADERS_MOC ${distancemapplugin_HEADERS})
-QT4_WRAP_UI(distancemapplugin_FORMS_HEADERS ${distancemapplugin_FORMS})
-
-INCLUDE(${QT_USE_FILE})
-ADD_DEFINITIONS(${QT_DEFINITIONS})
+QT5_WRAP_CPP(distancemapplugin_HEADERS_MOC ${distancemapplugin_HEADERS})
+QT5_WRAP_UI(distancemapplugin_FORMS_HEADERS ${distancemapplugin_FORMS})
 
 ADD_LIBRARY(distancemapplugin SHARED ${distancemapplugin_SOURCES}
     ${distancemapplugin_HEADERS_MOC}

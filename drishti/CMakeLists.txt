@@ -13,7 +13,6 @@ SET(drishti_SOURCES
   colorbar.cpp
   colorbargrabber.cpp 
   colorbarobject.cpp 
-  checkupdates.cpp 
   clipinformation.cpp
   clipplane.cpp
   clipobject.cpp 
@@ -33,6 +32,11 @@ SET(drishti_SOURCES
   fileslistdialog.cpp 
   geometryobjects.cpp 
   geoshaderfactory.cpp
+  gilightgrabber.cpp
+  gilightobject.cpp
+  gilights.cpp
+  gilightinfo.cpp
+  gilightobjectinfo.cpp
   glewinitialisation.cpp 
   global.cpp 
   glowshaderfactory.cpp 
@@ -43,12 +47,19 @@ SET(drishti_SOURCES
   gridobject.cpp 
   hitpoints.cpp 
   hitpointgrabber.cpp 
+  imagecaptiongrabber.cpp
+  imagecaptionobject.cpp
+  imagecaptions.cpp
   keyframe.cpp 
   keyframeeditor.cpp 
   keyframeinformation.cpp 
+  landmarkinformation.cpp
+  landmarks.cpp
   lightdisc.cpp 
+  lighthandler.cpp
   lightinginformation.cpp 
   lightingwidget.cpp 
+  lightshaderfactory.cpp
   load2volumes.cpp 
   load3volumes.cpp 
   load4volumes.cpp 
@@ -102,6 +113,7 @@ SET(drishti_SOURCES
   trisets.cpp 
   trisetgrabber.cpp 
   trisetobject.cpp 
+  videoplayer.cpp
   viewer.cpp 
   viewinformation.cpp 
   viewseditor.cpp 
@@ -132,7 +144,7 @@ SET(drishti_HEADERS
   colorbar.h 
   colorbargrabber.h 
   colorbarobject.h 
-  checkupdates.h 
+  commonqtclasses.h
   classes.h 
   clipinformation.h 
   clipplane.h 
@@ -169,6 +181,11 @@ SET(drishti_HEADERS
   fileslistdialog.h   
   geometryobjects.h 
   geoshaderfactory.h 
+  gilightgrabber.h
+  gilightobject.h
+  gilights.h
+  gilightinfo.h
+  gilightobjectinfo.h
   glewinitialisation.h 
   global.h 
   glowshaderfactory.h 
@@ -179,12 +196,19 @@ SET(drishti_HEADERS
   gridobject.h 
   hitpoints.h 
   hitpointgrabber.h 
+  imagecaptiongrabber.h
+  imagecaptionobject.h
+  imagecaptions.h
   keyframe.h 
   keyframeeditor.h 
-  keyframeinformation.h 
+  keyframeinformation.h
+  landmarkinformation.h
+  landmarks.h
   lightdisc.h 
+  lighthandler.h
   lightinginformation.h 
   lightingwidget.h 
+  lightshaderfactory.h
   load2volumes.h 
   load3volumes.h 
   load4volumes.h 
@@ -238,6 +262,7 @@ SET(drishti_HEADERS
   trisets.h 
   trisetgrabber.h 
   trisetobject.h 
+  videoplayer.h
   viewer.h 
   viewinformation.h 
   viewseditor.h 
@@ -275,12 +300,9 @@ SET(drishti_FORMS
 
 SET(drishti_RESOURCES drishti.qrc)
 
-QT4_WRAP_CPP(drishti_HEADERS_MOC ${drishti_HEADERS})
-QT4_WRAP_UI(drishti_FORMS_HEADERS ${drishti_FORMS})
-QT4_ADD_RESOURCES(drishti_RESOURCES_RCC ${drishti_RESOURCES})
-
-INCLUDE(${QT_USE_FILE})
-ADD_DEFINITIONS(${QT_DEFINITIONS})
+QT5_WRAP_CPP(drishti_HEADERS_MOC ${drishti_HEADERS})
+QT5_WRAP_UI(drishti_FORMS_HEADERS ${drishti_FORMS})
+QT5_ADD_RESOURCES(drishti_RESOURCES_RCC ${drishti_RESOURCES})
 
 ADD_EXECUTABLE( drishti 
     ${drishti_SOURCES} 
@@ -288,15 +310,18 @@ ADD_EXECUTABLE( drishti
     ${drishti_FORMS_HEADERS} 
     ${drishti_RESOURCES_RCC})
 TARGET_LINK_LIBRARIES(drishti 
-   ${QT_LIBRARIES} ${QGLVIEWER_LIBRARIES}
+   ${QGLVIEWER_LIBRARIES}
    ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${GLEW_LIBRARY}
    ${NETCDF_LIBRARIES_CXX})
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR}
                     ${PROJECT_SOURCE_DIR}/drishti/16bit )
 
+qt5_use_modules(drishti Widgets Xml OpenGL Network Multimedia MultimediaWidgets)
+
+
 ADD_SUBDIRECTORY(plugins)
-ADD_SUBDIRECTORY(mopplugin)
+#ADD_SUBDIRECTORY(mopplugin)
 
 INSTALL (TARGETS drishti DESTINATION ${BIN_INSTALL_DIR})
 

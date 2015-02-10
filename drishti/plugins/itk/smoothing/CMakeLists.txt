@@ -1,4 +1,3 @@
-ADD_DEFINITIONS(${QT_DEFINITIONS})
 ADD_DEFINITIONS(-DQT_PLUGIN)
 ADD_DEFINITIONS(-DQT_NO_DEBUG)
 ADD_DEFINITIONS(-DQT_SHARED)
@@ -14,11 +13,8 @@ SET(smoothingplugin_HEADERS
 SET(smoothingplugin_FORMS ../../../propertyeditor.ui)
 
 
-QT4_WRAP_CPP(smoothingplugin_HEADERS_MOC ${smoothingplugin_HEADERS})
-QT4_WRAP_UI(smoothingplugin_FORMS_HEADERS ${smoothingplugin_FORMS})
-
-INCLUDE(${QT_USE_FILE})
-ADD_DEFINITIONS(${QT_DEFINITIONS})
+QT5_WRAP_CPP(smoothingplugin_HEADERS_MOC ${smoothingplugin_HEADERS})
+QT5_WRAP_UI(smoothingplugin_FORMS_HEADERS ${smoothingplugin_FORMS})
 
 ADD_LIBRARY(smoothingplugin SHARED ${smoothingplugin_SOURCES}
     ${smoothingplugin_HEADERS_MOC}

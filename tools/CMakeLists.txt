@@ -1,4 +1,2 @@
 ADD_SUBDIRECTORY(import)
-ADD_SUBDIRECTORY(launcher)
-#ADD_SUBDIRECTORY(paint)
 ADD_SUBDIRECTORY(paint-graphcut)
