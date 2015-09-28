@@ -21,7 +21,8 @@ class Volume : public QObject
   bool setFile(QString);
   QString fileName() { return m_fileName; }
 
-  void saveIntermediateResults();
+  void offLoadMemFile();
+  void loadMemFile();
 
   void gridSize(int&, int&, int&);
   QImage histogramImage1D()  { return m_histogramImage1D; }
@@ -65,6 +66,13 @@ class Volume : public QObject
 		   int, int,
 		   int, int);
   
+  uchar* memVolDataPtr() {return m_pvlFileManager.memVolDataPtr();};
+  uchar* memMaskDataPtr() {return m_mask.memMaskDataPtr();};
+
+  public slots :
+    void saveIntermediateResults();
+    
+
  signals :
   void progressChanged(int);
   void progressReset();

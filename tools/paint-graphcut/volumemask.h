@@ -15,6 +15,9 @@ class VolumeMask : public QObject
   void setFile(QString, bool);
   void setGridSize(int, int, int, int);
 
+  void offLoadMemFile();
+  void loadMemFile();
+
   void saveIntermediateResults();
 
   uchar* getMaskDepthSliceImage(int);
@@ -47,6 +50,8 @@ class VolumeMask : public QObject
 	     int, int,
 	     int, int,
 	     QBitArray);
+
+  uchar* memMaskDataPtr() {return m_maskFileManager.memVolDataPtr();};
 
  signals :
   void progressChanged(int);

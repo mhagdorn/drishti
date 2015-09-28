@@ -32,6 +32,18 @@ VolumeMask::reset()
 }
 
 void
+VolumeMask::offLoadMemFile()
+{
+  m_maskFileManager.setMemMapped(false);
+}
+
+void
+VolumeMask::loadMemFile()
+{
+  m_maskFileManager.loadMemFile();
+}
+
+void
 VolumeMask::saveIntermediateResults()
 {
   m_maskFileManager.saveMemFile();
@@ -67,7 +79,9 @@ VolumeMask::setGridSize(int d, int w, int h, int slabsize)
   m_maskFileManager.setSlabSize(m_depth+1);
 
   if (m_maskFileManager.exists())
-    m_maskFileManager.loadMemFile();    
+    m_maskFileManager.loadMemFile();
+  else
+    checkMaskFile();
 }
 
 void

@@ -105,14 +105,8 @@ StaticFunctions::checkExtension(QString flnm, const char *ext)
   bool ok = true;
   int extlen = strlen(ext);
 
-  QFileInfo info(flnm);
-  if (info.exists() && info.isFile())
-    {
-      QByteArray exten = flnm.toLatin1().right(extlen);
-      if (exten != ext)
-	ok = false;
-    }
-  else
+  QByteArray exten = flnm.toLatin1().right(extlen);
+  if (exten != ext)
     ok = false;
 
   return ok;
@@ -267,6 +261,76 @@ StaticFunctions::generateHistograms(float *flhist1D,
   progress.setValue(100);
   qApp->processEvents();
 }
+
+Vec
+StaticFunctions::getVoxelSizeFromHeader(QString pvlFilename)
+{
+  QDomDocument document;
+  QFile f(pvlFilename.toLatin1().data());
+  if (f.open(QIODevice::ReadOnly))
+    {
+      document.setContent(&f);
+      f.close();
+    }
+
+  QDomElement main = document.documentElement();
+  QDomNodeList dlist = main.childNodes();
+  for(int i=0; i<dlist.count(); i++)
+    {
+      if (dlist.at(i).nodeName() == "voxelsize")
+	{
+	  QStringList str = (dlist.at(i).toElement().text()).split(" ", QString::SkipEmptyParts);
+	  float vx = str[0].toFloat();
+	  float vy = str[1].toFloat();
+	  float vz = str[2].toFloat();
+	  return Vec(vx, vy, vz);
+	}
+    }
+  return Vec(1,1,1);
+}
+
+QString
+StaticFunctions::getVoxelUnitFromHeader(QString pvlFilename)
+{
+  QDomDocument document;
+  QFile f(pvlFilename.toLatin1().data());
+  if (f.open(QIODevice::ReadOnly))
+    {
+      document.setContent(&f);
+      f.close();
+    }
+
+  QDomElement main = document.documentElement();
+  QDomNodeList dlist = main.childNodes();
+  for(int i=0; i<dlist.count(); i++)
+    {
+      if (dlist.at(i).nodeName() == "voxelunit")
+	{
+	  QString pvalue = dlist.at(i).toElement().text();	  
+	  if (pvalue == "angstrom")
+	    return "A";
+	  else if (pvalue == "nanometer")
+	    return "nm";
+	  else if (pvalue == "micron")
+	    return "um";
+	  else if (pvalue == "millimeter")
+	    return "mm";
+	  else if (pvalue == "centimeter")
+	    return "cm";
+	  else if (pvalue == "meter")
+	    return "m";
+	  else if (pvalue == "kilometer")
+	    return "km";
+	  else if (pvalue == "parsec")
+	    return "p";
+	  else if (pvalue == "kiloparsec")
+	    return "kp";	  
+	}
+    }
+
+  return "";
+}
+
 void
 StaticFunctions::getDimensionsFromHeader(QString pvlFilename,
 					 int &d, int &w, int &h)

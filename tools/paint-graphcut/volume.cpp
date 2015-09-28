@@ -1,10 +1,25 @@
 #include "volume.h"
 #include "staticfunctions.h"
 #include "global.h"
+#include "getmemorysize.h"
 
 void Volume::setBitmapThread(BitmapThread *bt) {thread = bt;}
 
 void Volume::saveIntermediateResults() { m_mask.saveIntermediateResults(); }
+
+void
+Volume::offLoadMemFile()
+{
+  m_mask.offLoadMemFile();
+  m_pvlFileManager.setMemMapped(false);
+}
+
+void
+Volume::loadMemFile()
+{
+  m_pvlFileManager.loadMemFile();
+  m_mask.loadMemFile();
+}
 
 void
 Volume::setMaskDepthSlice(int slc, uchar* tagData)
@@ -129,21 +144,29 @@ Volume::setFile(QString volfile)
   m_pvlFileManager.setSlabSize(slabSize);
 
   //----------------
-  float inmemGB = 0.3+((float)m_depth*m_width*m_height*2)/((float)1024*1024*1024);
+  float memSize = getMemorySize();
+  memSize/=1024;
+  memSize/=1024;
+  memSize/=1024;
+//  QMessageBox::information(0, "", QString("Physical Memory : %1 GB").arg(memSize));
+  float inmemGB = 0.3+((float)m_depth*m_width*m_height*2.5)/((float)1024*1024*1024);
   bool inMem = true;
-  bool ok;
-  QStringList dtypes;
-  dtypes.clear();
-  dtypes << "Yes"
-	 << "No";
-  QString option = QInputDialog::getItem(0,
-					 "Memory Mapped File",
-					 QString("Load volume in memory for fast operations ?\nYou will need atleast %1 Gb").arg(inmemGB),
-					 dtypes,
-					 0,
-					 false,
-					 &ok);
-  if (ok && option == "No") inMem = false;
+  if (inmemGB > memSize) // ask when memory requirements greater than physical memory detected
+    {
+      bool ok;
+      QStringList dtypes;
+      dtypes.clear();
+      dtypes << "Yes"
+	     << "No";
+      QString option = QInputDialog::getItem(0,
+					     "Memory Mapped File",
+					     QString("Load volume in memory for fast operations ?\nYou will need atleast %1 Gb").arg(inmemGB),
+					     dtypes,
+					     0,
+					     false,
+					     &ok);
+      if (ok && option == "No") inMem = false;
+    }
   //----------------
   m_pvlFileManager.setMemMapped(inMem);
 
@@ -687,182 +710,4 @@ Volume::markVisibleRegion(int mind, int maxd,
 				    m_bitmask.testBit(idx));
 	}
 }
-
-//void
-//Volume::saveSmoothedVolume()
-//{
-//  if (m_gradFileManager.exists())
-//    return;
-//
-//  m_gradFileManager.createFile(true);
-//
-//  QProgressDialog progress(QString("Saving occlusion spectrum volume"),
-//			   "Cancel",
-//			   0, 100,
-//			   0);
-//  progress.setMinimumDuration(0);
-//
-//  uchar *tmp = new uchar[m_width*m_height];
-//  uchar *stmp = new uchar[m_width*m_height];
-//  int spread = 1;
-//  uchar **val;
-//
-//  bool ok;
-//  QString str = QInputDialog::getText(0,
-//				      "Occlusion Spectrum Spread",
-//				      "Enter filter size ",
-//				      QLineEdit::Normal,
-//				      "1",
-//				      &ok);
-//
-//  if (ok && !str.isEmpty())
-//    spread = qMax(1, str.toInt());
-//
-//  if (spread > 0)
-//    {
-//      val = new uchar*[2*spread+1];
-//      for (int i=0; i<2*spread+1; i++)
-//	val[i] = new uchar[m_width*m_height];
-//    }
-//
-//  //-----------------
-//  for(int d=0; d<=spread; d++)
-//    {
-//      uchar *vslice = m_pvlFileManager.getSlice(d);
-//      memcpy(tmp, vslice, m_width*m_height);
-//
-//      for(int j=0; j<m_width; j++)
-//	{
-//	  int jidx = j*m_height;
-//	  for(int k=0; k<m_height; k++)
-//	  { 
-//	    int ks = qMax(0, k-spread); 
-//	    int ke = qMin(m_height-spread, k+spread);
-//	    
-//	    int dn = 0; 
-//	    float avg = 0;
-//	    for(int k1=ks; k1<=ke; k1++)
-//	      {		  
-//		int idx = jidx+k1;
-//		avg += tmp[idx]; 
-//		dn ++; 
-//	      }
-//	    avg = avg/dn; 
-//	    val[spread+d][j*m_height + k] = avg; 
-//	  }
-//	}
-//
-//      memcpy(tmp, val[spread+d], m_width*m_height);
-//
-//      for(int k=0; k<m_height; k++)
-//	for(int j=0; j<m_width; j++)
-//	  {
-//	    int js = qMax(0, j-spread);
-//	    int je = qMin(m_width-spread, j+spread);
-//	    
-//	    int dn = 0; 
-//	    float avg = 0;
-//	    for(int j1=js; j1<=je; j1++) 
-//	      {		  
-//		int idx = j1*m_height+k;
-//		avg += tmp[idx]; 
-//		dn ++; 
-//	      }
-//	    avg = avg/dn; 
-//	    val[spread+d][j*m_height + k] = avg; 
-//	  }
-//
-//      if (d == 0)
-//	{
-//	  for(int i=-spread; i<0; i++)
-//	    memcpy(val[spread+i], val[spread], m_width*m_height);
-//	}
-//    }
-//  //-----------------
-//
-//  for(int d=0; d<m_depth; d++)
-//    {
-//      progress.setValue((int)(100.0*(float)d/(float)m_depth));
-//      qApp->processEvents();
-//
-//      int ij = 0;
-//      for(int j=0; j<m_width; j++)
-//	for(int k=0; k<m_height; k++)
-//	  {
-//	    float avg = 0;
-//	    for(int i=0; i<2*spread+1; i++) 
-//	      avg += val[i][ij]; 
-//
-//	    stmp[ij] = avg/(2*spread+1);
-//	    ij++;
-//	  }
-//
-//      m_gradFileManager.setSlice(d, stmp);
-//      
-//      // now shift the planes
-//      uchar *vtmp = val[0];
-//      for(int i=0; i<2*spread; i++)
-//	val[i] = val[i+1];
-//      val[2*spread] = vtmp;
-//
-//      if (2*spread+d+1 >= m_depth)
-//	memcpy(val[2*spread], val[2*spread-1], m_width*m_height);
-//      else
-//	{
-//	  uchar *vslice = m_pvlFileManager.getSlice(2*spread+d+1);
-//	  memcpy(tmp, vslice, m_width*m_height);
-//
-//	  for(int j=0; j<m_width; j++)
-//	    {
-//	      int jidx = j*m_height;
-//	      for(int k=0; k<m_height; k++)
-//		{ 
-//		  int ks = qMax(0, k-spread); 
-//		  int ke = qMin(m_height-spread, k+spread);
-//		  
-//		  int dn = 0; 
-//		  float avg = 0;
-//		  for(int k1=ks; k1<=ke; k1++)
-//		    {		  
-//		      int idx = jidx+k1;
-//		      avg += tmp[idx]; 
-//		      dn ++; 
-//		    }
-//		  avg = avg/dn; 
-//		  val[2*spread][j*m_height + k] = avg; 
-//		}
-//	    }
-//	  
-//	  memcpy(tmp, val[2*spread], m_width*m_height);
-//	  
-//	  for(int k=0; k<m_height; k++)
-//	    for(int j=0; j<m_width; j++)
-//	      {
-//		int js = qMax(0, j-spread);
-//		int je = qMin(m_width-spread, j+spread);
-//		
-//		int dn = 0; 
-//		float avg = 0;
-//		for(int j1=js; j1<=je; j1++) 
-//		  {		  
-//		    int idx = j1*m_height+k;
-//		    avg += tmp[idx]; 
-//		    dn ++; 
-//		  }
-//		avg = avg/dn; 
-//		val[2*spread][j*m_height + k] = avg; 
-//	      }
-//	}
-//    }  
-//
-//  for (int i=0; i<2*spread+1; i++)
-//    delete [] val[i];
-//  delete [] val;
-//
-//  delete [] tmp;
-//  delete [] stmp;
-//
-//  progress.setValue(100);
-//  qApp->processEvents();
-//}
 

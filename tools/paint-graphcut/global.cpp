@@ -178,3 +178,22 @@ int Global::m_smooth = 1;
 int Global::smooth() { return m_smooth; }
 void Global::setSmooth(int d) { m_smooth = d; }
 
+int Global::m_thickness = 1;
+int Global::thickness() { return m_thickness; }
+void Global::setThickness(int d) { m_thickness = d; }
+
+bool Global::m_closed = true;
+bool Global::closed() { return m_closed; }
+void Global::setClosed(bool b) { m_closed = b; }
+
+int Global::m_selpres = 15;
+int Global::selectionPrecision() { return m_selpres; }
+void Global::setSelectionPrecision(int s) { m_selpres = s; }
+
+Vec Global::m_voxelScaling = Vec(1,1,1);
+Vec Global::voxelScaling() { return m_voxelScaling; }
+void Global::setVoxelScaling(Vec v) { m_voxelScaling = v; }
+
+QString Global::m_voxelUnit = "";
+QString Global::voxelUnit() { return m_voxelUnit; }
+void Global::setVoxelUnit(QString s) { m_voxelUnit = s; }

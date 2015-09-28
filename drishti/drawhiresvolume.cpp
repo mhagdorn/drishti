@@ -20,6 +20,27 @@
 #include <QDataStream>
 
 void
+DrawHiresVolume::getOpMod(float& front, float& back)
+{
+  front = m_frontOpMod;
+  back = m_backOpMod;
+}
+
+void
+DrawHiresVolume::setOpMod(float fo, float bo)
+{
+  m_frontOpMod = fo;
+  m_backOpMod = bo;
+}
+
+void
+DrawHiresVolume::check_MIP()
+{
+  if (MainWindowUI::mainWindowUI()->actionMIP->isChecked())
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+}
+
+void
 DrawHiresVolume::saveImage2Volume(QString pfile)
 {
   m_image2VolumeFile = pfile;
@@ -176,6 +197,8 @@ DrawHiresVolume::~DrawHiresVolume()
 void
 DrawHiresVolume::renew()
 {
+  m_frontOpMod = 1.0;
+  m_backOpMod = 1.0;
   m_saveImage2Volume = false;
 
   m_showing = true;
@@ -1082,6 +1105,8 @@ DrawHiresVolume::createDefaultShader()
   m_defaultParm[46] = glGetUniformLocationARB(m_defaultShader, "shdlod");
   m_defaultParm[47] = glGetUniformLocationARB(m_defaultShader, "shdTex");
   m_defaultParm[48] = glGetUniformLocationARB(m_defaultShader, "shdIntensity");
+
+  m_defaultParm[49] = glGetUniformLocationARB(m_defaultShader, "opmod");
 }
 
 void
@@ -2535,6 +2560,12 @@ DrawHiresVolume::drawDefault(Vec pn,
   else
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA); // back to front
 
+
+  //-----------------------------
+  check_MIP();
+  //-----------------------------
+
+
   drawSlicesDefault(pn, minvert, maxvert,
 		    layers, stepsize);
 
@@ -2786,6 +2817,15 @@ DrawHiresVolume::drawSlicesDefault(Vec pn, Vec minvert, Vec maxvert,
     {
       po += pnDir;
 
+
+      {
+	float sdist = qAbs((maxvert - po)*pn);
+	//float modop = qBound(0.0f, sdist/deplen, 1.0f);
+	float modop = StaticFunctions::smoothstep(0, 1, sdist/deplen);
+	modop = m_frontOpMod*(1-modop) + modop*m_backOpMod;
+	glUniform1fARB(m_defaultParm[49], modop);
+      }
+
       float depthcue = 1;     
       if (Global::depthcue())
 	{
@@ -2812,8 +2852,10 @@ DrawHiresVolume::drawSlicesDefault(Vec pn, Vec minvert, Vec maxvert,
 			 false, false, Vec(0,0,0),
 			 false);
 	  glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ONE);
+	  check_MIP();
 	}		     
       //------------------------------------------------------
+
       if (Global::volumeType() != Global::DummyVolume)
 	{
 	  enableTextureUnits();
@@ -3101,6 +3143,8 @@ DrawHiresVolume::screenShadow(int ScreenXMin, int ScreenXMax,
     glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ONE); // for frontlit volume
   else
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA); // back to front
+
+  check_MIP();
 
   glUseProgramObjectARB(0); // disable shaders 
   StaticFunctions::popOrthoView();
@@ -3498,6 +3542,10 @@ DrawHiresVolume::drawPathInViewport(int pathOffset, Vec lpos, float depthcue,
 
   glUniform3fARB(parm[6], lpos.x, lpos.y, lpos.z);
 
+  // lightlod 0 means use basic lighting model
+  int lightlod = 0;
+  glUniform1iARB(parm[40], lightlod); // lightlod
+
   if (slabend > 1)
     setShader2DTextureParameter(true, defaultShader);
   else
@@ -3723,12 +3771,20 @@ DrawHiresVolume::drawPathInViewport(int pathOffset, Vec lpos, float depthcue,
     glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ONE); // for frontlit volume
   else
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA); // back to front
+
+  check_MIP();
   // --------------------------------
 
   glDepthMask(GL_TRUE);
 
   if (slabend > 1) // reset it to 0
     glUniform1iARB(parm[24], 0); // zoffset    
+
+
+  int lightgridx, lightgridy, lightgridz, lightncols, lightnrows;
+  LightHandler::lightBufferInfo(lightgridx, lightgridy, lightgridz,
+				lightnrows, lightncols, lightlod);
+  glUniform1iARB(parm[40], lightlod); // lightlod
 }
 
 void
@@ -3766,7 +3822,6 @@ DrawHiresVolume::drawClipPlaneInViewport(int clipOffset, Vec lpos, float depthcu
     }
   setShader2DTextureParameter(true, defaultShader);
 
-
   bool ok = false;
   Vec voxelScaling = Global::voxelScaling();
   int nclipPlanes = (GeometryObjects::clipplanes()->positions()).count();
@@ -3786,6 +3841,10 @@ DrawHiresVolume::drawClipPlaneInViewport(int clipOffset, Vec lpos, float depthcu
   parm = m_defaultParm;
 
   glUniform3fARB(parm[6], lpos.x, lpos.y, lpos.z);
+
+  // lightlod 0 means use basic lighting model
+  int lightlod = 0;
+  glUniform1iARB(parm[40], lightlod); // lightlod
 
   QList<bool> clips;
   int btfset;
@@ -3978,6 +4037,11 @@ DrawHiresVolume::drawClipPlaneInViewport(int clipOffset, Vec lpos, float depthcu
   glUseProgramObjectARB(m_defaultShader);
   glEnable(GL_DEPTH_TEST);
   // --------------------------------
+
+  int lightgridx, lightgridy, lightgridz, lightncols, lightnrows;
+  LightHandler::lightBufferInfo(lightgridx, lightgridy, lightgridz,
+				lightnrows, lightncols, lightlod);
+  glUniform1iARB(m_defaultParm[40], lightlod); // lightlod
 }
 
 void
@@ -4482,6 +4546,16 @@ DrawHiresVolume::keyPressEvent(QKeyEvent *event)
 	  MainWindowUI::mainWindowUI()->actionRedBlue->setChecked(false);
 	  MainWindowUI::mainWindowUI()->actionRedCyan->setChecked(false);
 	}
+
+      return true;
+    }
+
+  if (event->key() == Qt::Key_6)
+    {
+      if (MainWindowUI::mainWindowUI()->actionMIP->isChecked())
+	MainWindowUI::mainWindowUI()->actionMIP->setChecked(false);
+      else
+	MainWindowUI::mainWindowUI()->actionMIP->setChecked(true);
 
       return true;
     }

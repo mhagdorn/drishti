@@ -10,13 +10,22 @@ VolumeFileManager::VolumeFileManager()
   m_startBlock = m_endBlock = 0;
   m_filenames.clear();
   m_volData = 0;
-  m_memmapped = true;
+  m_memmapped = false;
   reset();
 }
 
 VolumeFileManager::~VolumeFileManager() { reset(); }
 
-void VolumeFileManager::setMemMapped(bool b) { m_memmapped = b; }
+void VolumeFileManager::setMemMapped(bool b)
+{
+  m_memmapped = b;
+
+  if (m_volData)
+    delete [] m_volData;
+  m_volData = 0;
+
+  m_memChanged = false;
+}
 bool VolumeFileManager::isMemMapped() { return m_memmapped; }
 
 void
@@ -42,15 +51,14 @@ VolumeFileManager::reset()
   m_startBlock = m_endBlock = 0;
 
   if (m_volData)
-    {
-      delete [] m_volData;
-      m_volData = 0;
-    }
+    delete [] m_volData;
+  m_volData = 0;
 
   if (m_qfile.isOpen())
     m_qfile.close();
 
-  m_memmapped = true;
+  m_memmapped = false;
+  m_memChanged = false;
 }
 
 int VolumeFileManager::depth() { return m_depth; }
@@ -193,7 +201,7 @@ VolumeFileManager::createFile(bool writeHeader, bool writeData)
 	m_qfile.close();
 
       m_qfile.setFileName(m_filename);
-      m_qfile.open(QFile::ReadWrite);
+      m_qfile.open(QFile::WriteOnly);
 
       int nslices = qMin(m_slabSize, m_depth-ns*m_slabSize);      
       if (writeHeader)
@@ -217,6 +225,7 @@ VolumeFileManager::createFile(bool writeHeader, bool writeData)
 	    }
 	}
     }
+  m_qfile.close();
 
   progress.setValue(100);
 
@@ -790,7 +799,7 @@ VolumeFileManager::blockInterpolatedRawValue(float dv, float wv, float hv)
 void
 VolumeFileManager::saveMemFile()
 {
-  if (!m_memmapped)
+  if (!m_memChanged)
     return;
 
   uchar vt;
@@ -901,6 +910,8 @@ VolumeFileManager::loadMemFile()
       m_qfile.close(); 
     }
   progress.setValue(100);
+
+  m_memChanged = false;
 }
 
 void
@@ -966,6 +977,8 @@ VolumeFileManager::setSliceMem(int d, uchar *tmp)
   m_qfile.write((char*)tmp, bps);
   m_qfile.close();
   //--------
+
+  //m_memChanged = true;
 }
 
 uchar*
@@ -1002,6 +1015,8 @@ VolumeFileManager::setWidthSliceMem(int w, uchar *tmp)
     memcpy(m_volData + d*bps + w*m_height*m_bytesPerVoxel,
 	   tmp + d*m_height*m_bytesPerVoxel,
 	   m_height*m_bytesPerVoxel);
+
+  m_memChanged = true;
 }
 
 uchar*
@@ -1046,6 +1061,8 @@ VolumeFileManager::setHeightSliceMem(int h, uchar *tmp)
 	       tmp + it*m_bytesPerVoxel,
 	       m_bytesPerVoxel);
     }
+
+  m_memChanged = true;
 }
 
 uchar*
