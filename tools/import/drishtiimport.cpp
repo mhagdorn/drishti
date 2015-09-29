@@ -41,16 +41,13 @@ DrishtiImport::registerPlugins()
   m_pluginDirTypes.clear();
   m_pluginDirDLib.clear();
 
-  QString plugindir = qApp->applicationDirPath() + QDir::separator() + "importplugins";
+  QString plugindir = QStringLiteral(DRISHTI_PLUGIN_DIR) + QDir::separator() + "importplugins";
   QStringList filters;
 
 #if defined(Q_OS_WIN32)
   filters << "*.dll";
 #endif
 #ifdef Q_OS_MACX
-  // look in drishti.app/importplugins
-  QString sep = QDir::separator();
-  plugindir = qApp->applicationDirPath()+sep+".."+sep+".."+sep+"importplugins";
   filters << "*.dylib";
 #endif
 #if defined(Q_OS_LINUX)

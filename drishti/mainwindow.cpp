@@ -1,3 +1,4 @@
+#include "DrishtiConfig.h"
 #include "global.h"
 #include "mainwindow.h"
 #include "mainwindowui.h"
@@ -318,7 +319,7 @@ MainWindow::registerPlugins()
   m_pluginDll.clear();
 
   // look in @executable_path/renderplugins
-  QString plugindir = qApp->applicationDirPath() + QDir::separator() + "renderplugins";
+  QString plugindir = QStringLiteral(DRISHTI_PLUGIN_DIR) + QDir::separator() + "renderplugins";
 
   QPair<QMenu*, QString> pair;
   QStack< QPair<QMenu*, QString> > stack;
@@ -328,9 +329,6 @@ MainWindow::registerPlugins()
   filters << "*.dll";
 #endif
 #ifdef Q_OS_MACX
-  // look in drishti.app/renderplugins
-  QString sep = QDir::separator();
-  plugindir = qApp->applicationDirPath()+sep+".."+sep+".."+sep+"renderplugins";
   filters << "*.dylib";
 #endif
 #if defined(Q_OS_LINUX)

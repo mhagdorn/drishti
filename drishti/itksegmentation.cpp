@@ -1,3 +1,4 @@
+#include "DrishtiConfig.h"
 #include "itksegmentation.h"
 #include "mopplugininterface.h"
 #include <QMessageBox>
@@ -12,19 +13,14 @@ ITKSegmentation::applyITKFilter(int nx, int ny, int nz,
   QString sep = QDir::separator();
   QString pluginName;
 
+  QString plugindir = QStringLiteral(DRISHTI_PLUGIN_DIR) + QDir::separator() + "mopplugins";
 #if defined(Q_OS_WIN32)
-  // look in mopplugins
-  QString plugindir = qApp->applicationDirPath() + QDir::separator() + "mopplugins";
   pluginName = plugindir + sep + "itkplugin.dll";
 #endif
 #ifdef Q_OS_MACX
-  // look in drishti.app/mopplugins
-  QString plugindir = qApp->applicationDirPath()+sep+".."+sep+".."+sep+"mopplugins";
   pluginName = plugindir + sep + "libitkplugin.dylib";
 #endif
 #if defined(Q_OS_LINUX)
-  // look in mopplugins
-  QString plugindir = qApp->applicationDirPath() + QDir::separator() + "mopplugins";
   pluginName = plugindir + sep + "libitkplugin.so";
 #endif
 
