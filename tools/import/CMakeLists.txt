@@ -16,9 +16,7 @@ SET(drishtiimport_SOURCES
   raw2pvl.cpp 
   savepvldialog.cpp 
   volumedata.cpp
-  volumefilemanager.cpp 
-  marchingcubes.cpp 
-  ply.c)
+  volumefilemanager.cpp) 
 
 SET(drishtiimport_HEADERS 
   global.h 
@@ -41,9 +39,7 @@ SET(drishtiimport_HEADERS
   volumefilemanager.h 
   volumedata.h 
   volinterface.h 
-  lookuptable.h 
-  marchingcubes.h 
-  ply.h)
+  lookuptable.h)
 
 SET(drishtiimport_FORMS
   remapwidget.ui 

@@ -5,8 +5,8 @@ SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 # set version and export 
 SET (Drishti_VERSION_MAJOR 2)
-SET (Dristhi_VERSION_MINOR 3)
-SET (Drishti_VERSION_MINCRO 2)
+SET (Dristhi_VERSION_MINOR 6)
+SET (Drishti_VERSION_MINCRO 1)
 
 set(BIN_INSTALL_DIR bin CACHE PATH "Installation directory for executables")
 set(LIB_INSTALL_DIR lib CACHE PATH "Installation directory for libraries")

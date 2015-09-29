@@ -5,11 +5,17 @@ SET(drishtipaint_SOURCES
   bitmapthread.cpp 
   dcolordialog.cpp 
   dcolorwheel.cpp 
+  fiber.cpp 
+  fibergroup.cpp
   imagewidget.cpp 
   global.cpp 
   gradienteditor.cpp 
   gradienteditorwidget.cpp 
+  livewire.cpp 
   myslider.cpp 
+  morphcurve.cpp 
+  morphslice.cpp 
+  propertyeditor.cpp
   splineeditor.cpp 
   splineeditorwidget.cpp 
   splineinformation.cpp 
@@ -22,23 +28,34 @@ SET(drishtipaint_SOURCES
   coloreditor.cpp 
   curvegroup.cpp
   opacityeditor.cpp
+  viewer.cpp
   volume.cpp 
   volumefilemanager.cpp 
   volumemask.cpp
   graphcut/graph.cpp 
-  graphcut/graphcut.cpp)
+  graphcut/graphcut.cpp
+  ply.c 
+  marchingcubes.cpp 
+  showhelp.cpp 
+  getmemorysize.cpp 
+  popupslider.cpp)
 
 SET(drishtipaint_HEADERS 
   drishtipaint.h 
   bitmapthread.h 
   dcolordialog.h 
   dcolorwheel.h 
+  fiber.h 
+  fibergroup.h
   imagewidget.h
   global.h 
   gradienteditor.h 
   gradienteditorwidget.h 
+  livewire.h 
   myslider.h 
   morphcurve.h
+  morphslice.h 
+  propertyeditor.h
   splineeditor.h 
   splineeditorwidget.h
   splineinformation.h 
@@ -51,16 +68,28 @@ SET(drishtipaint_HEADERS
   coloreditor.h 
   curvegroup.h
   opacityeditor.h 
+  viewer.h 
   volume.h 
   volumefilemanager.h 
   volumemask.h
   graphcut/graph.h 
   graphcut/graphcut.h
   graphcut/block.h 
-  graphcut/point.h)
+  graphcut/point.h
+  ply.h 
+  lookuptable.h 
+  marchingcubes.h 
+  showhelp.h
+  getmemorysize.h 
+  popupslider.h)
 
 SET(drishtipaint_FORMS
-  drishtipaint.ui)
+  drishtipaint.ui
+  viewermenu.ui
+  graphcutmenu.ui
+  curvesmenu.ui
+  fibersmenu.ui
+  propertyeditor.ui)
 
 SET(drishtipaint_RESOURCES paint.qrc)
 
@@ -82,7 +111,7 @@ TARGET_LINK_LIBRARIES(drishtipaint
    ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${GLEW_LIBRARY}
    ${NETCDF_LIBRARIES_CXX})
 
-qt5_use_modules(drishtipaint Widgets Xml)
+qt5_use_modules(drishtipaint Widgets Xml OpenGL)
 
 INSTALL (TARGETS drishtipaint DESTINATION ${BIN_INSTALL_DIR})
 
